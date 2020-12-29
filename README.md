@@ -177,3 +177,6 @@ int main() {
     return 0;
 }
 ```
+
+
+## Usage in another cmake project
