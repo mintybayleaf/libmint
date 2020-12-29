@@ -1,0 +1,27 @@
+version: 2.1
+
+jobs:
+    build:
+        docker:
+            - image: cimg/base:2020.01
+        steps:
+            - checkout
+            - run:
+                name: Dependencies
+                command: |
+                    cd scripts
+                    chmod +x install.bash
+                    sudo ./install.bash
+            - run:
+                name: Build
+                command: |
+                    cmake -H. -Bbuild
+                    cmake --build build --target all
+            - run:
+                name: Valgrind Examples
+                command: |
+                    valgrind --leak-check=full --show-leak-kinds=definite,indirect,possible --error-exitcode=1 ./build/bin/loggo_example
+            - run:
+                name: Test
+                command: |
+                    echo "Test"
