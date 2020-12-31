@@ -15,7 +15,7 @@ You have two options with this library.
     You must only define `FILENAME_IMPLEMENTATION` in the translation unit you want the functions to be defined,
     not just decalared. If you dont do this you will encounter linker errors for unresolved defintions.
     You can change whether the api is declared static or extern which would scope the library to one translation unit by defining
-    `FILENAME_DEF_STATIC`.
+    `MINT_DEF_STATIC`.
 
 
 2.
@@ -51,20 +51,12 @@ NOTE: These are tested on Windows 10 with MSVC 2019, OSX Big Sur and Debian Linu
 ## In Progress
 
 
-2. CoolDisplay (cooldisplay.h)
-    - SDL2 wrapper for creating useable windows
-    - Better drawing methods
-    - Helpful wrappers
-    - Predefined window types
-    - Vulkan wrappers
-
-
-3. CrossAudio (crossaudio.h)
-    - Simple audio hardware device wrapper
-    - Query audio devices and get handles to them
-    - Send WAV audio to audio devices
-    - Wave generation functions/types
-    - Good for generating sounds
+2. EzEmu (ezemu.h)
+    - SDL2 code for creating emulator displays
+    - Texture rendering for pixel buffers
+    - Simple 2D emulators
+    - Simple useful components/prebuilt windows
+    - Audio hardware support
 
 
 ## Installation

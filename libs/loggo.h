@@ -1,5 +1,5 @@
-#ifndef LOGGO_H
-#define LOGGO_H
+#ifndef MINT_LOGGO_H
+#define MINT_LOGGO_H
 
 #include <stdlib.h>
 #include <stdint.h>
@@ -9,10 +9,10 @@
 #include <time.h>
 #include <math.h>
 
-#if defined(__unix__) || defined(linux) || defined(__APPLE__) || defined(LOGGO_USE_POSIX)
+#if defined(__unix__) || defined(linux) || defined(__APPLE__) || defined(MINT_USE_POSIX)
     #include <pthread.h>
     #include <unistd.h>
-#elif defined(_WIN32) || defined(LOGGO_USE_WINDOWS)
+#elif defined(_WIN32) || defined(MINT_USE_WINDOWS)
     #include <io.h>
     #include <Windows.h>
 #endif
@@ -27,11 +27,11 @@
 // current translation unit which could be what you want
 // Defaults to extern API so define LOGGO_IMPLEMENTATION in the file you want
 // to provide definitions in
-#ifndef LOGGODEF
-    #ifdef LOGGO_DEF_STATIC
-        #define LOGGODEF static
+#ifndef MINTDEF
+    #ifdef MINT_DEF_STATIC
+        #define MINTDEF static
     #else
-        #define LOGGODEF extern
+        #define MINTDEF extern
     #endif
 #endif
 
@@ -80,46 +80,46 @@ typedef struct {
  * name cannot be NULL
  * Returns logger id on success or -1 for Failure
  */
-LOGGODEF int32_t Loggo_CreateLogger(const char* name, Loggo_LogFormat* user_format, Loggo_LogHandler* user_handler);
+MINTDEF int32_t Loggo_CreateLogger(const char* name, Loggo_LogFormat* user_format, Loggo_LogHandler* user_handler);
 
 
 /* 
  * Delete logger waiting for all of its messages,
  * This will also clean up the resources if its the last logger so there is no need to call DeleteLoggers
  */
-LOGGODEF void Loggo_DeleteLogger(const char* name);
+MINTDEF void Loggo_DeleteLogger(const char* name);
 
 
 /* 
  * Stop Logger threads and clean up handles.
  * This is idempotent so it can be called multiple times
  */
- LOGGODEF void Loggo_DeleteLoggers();
+ MINTDEF void Loggo_DeleteLoggers();
 
 
 /* 
  * Pass messages to the log queue, the logging thread will accept messages,
  * then use the handler methods (or defaults) to output logs
  */
-LOGGODEF void Loggo_Log(const char* name, Loggo_LogLevel level, const char* msg);
-LOGGODEF void Loggo_Log2(const char* name, Loggo_LogLevel level, char* msg, bool free_string);
+MINTDEF void Loggo_Log(const char* name, Loggo_LogLevel level, const char* msg);
+MINTDEF void Loggo_Log2(const char* name, Loggo_LogLevel level, char* msg, bool free_string);
 
 // Loggo Handler methods
 
 // FILE* friends
-LOGGODEF int Loggo_StreamWrite(char* text, void* arg);
-LOGGODEF int Loggo_StreamClose(void* arg);
-LOGGODEF int Loggo_StreamFlush(void* arg);
+MINTDEF int Loggo_StreamWrite(char* text, void* arg);
+MINTDEF int Loggo_StreamClose(void* arg);
+MINTDEF int Loggo_StreamFlush(void* arg);
 
 // Raw Descriptor IO
-LOGGODEF int Loggo_DescriptorWrite(char* text, void* arg);
-LOGGODEF int Loggo_DescriptorClose(void* arg);
-LOGGODEF int Loggo_DescriptorFlush(void* arg);
+MINTDEF int Loggo_DescriptorWrite(char* text, void* arg);
+MINTDEF int Loggo_DescriptorClose(void* arg);
+MINTDEF int Loggo_DescriptorFlush(void* arg);
 
 // Do nothing
-LOGGODEF int Loggo_NullWrite(char* text, void* arg);
-LOGGODEF int Loggo_NullClose(void* arg);
-LOGGODEF int Loggo_NullFlush(void* arg);
+MINTDEF int Loggo_NullWrite(char* text, void* arg);
+MINTDEF int Loggo_NullClose(void* arg);
+MINTDEF int Loggo_NullFlush(void* arg);
 
 #ifdef __cplusplus
 }
@@ -178,7 +178,7 @@ LOGGODEF int Loggo_NullFlush(void* arg);
 
 #define LOGGO_UNUSED(x) (void)(x)
 
-#if defined(__unix__) || defined(linux) || defined(__APPLE__) || defined(LOGGO_USE_POSIX)
+#if defined(__unix__) || defined(linux) || defined(__APPLE__) || defined(MINT_USE_POSIX)
     #define LOGGO_THREAD_TYPE pthread_t
     #define LOGGO_THREAD_CREATE(id, func, param) pthread_create((id), NULL, (func), (param))
     #define LOGGO_THREAD_JOIN(id) pthread_join((id), (NULL))
@@ -201,15 +201,15 @@ LOGGODEF int Loggo_NullFlush(void* arg);
     #define LOGGO_WHITE    "\x1B[37m"
     #define LOGGO_RESET    "\033[0m"
 
-    LOGGODEF int Loggo_DescriptorWrite(char* text, void* arg) {
+    MINTDEF int Loggo_DescriptorWrite(char* text, void* arg) {
         return write(*(int*)arg, text, strlen(text));
     }
 
 
-    LOGGODEF int Loggo_DescriptorClose(void* arg) {
+    MINTDEF int Loggo_DescriptorClose(void* arg) {
         return close(*(int*)arg);
     }
-#elif defined(_WIN32) || defined(LOGGO_USE_WINDOWS)
+#elif defined(_WIN32) || defined(MINT_USE_WINDOWS)
     #define LOGGO_THREAD_TYPE LPDWORD
     #define LOGGO_THREAD_CREATE(id, func, param) CreateThread(NULL, 0, func, param, 0, id)
     #define LOGGO_THREAD_JOIN(id) WaitForSingleObject((id), INFINITE)
@@ -233,53 +233,53 @@ LOGGODEF int Loggo_NullFlush(void* arg);
     #define LOGGO_WHITE    ""
     #define LOGGO_RESET    ""
 
-    LOGGODEF int Loggo_DescriptorWrite(char* text, void* arg) {
+    MINTDEF int Loggo_DescriptorWrite(char* text, void* arg) {
         return _write(*(int*)arg, text, strlen(text));
     }
 
     
-    LOGGODEF int Loggo_DescriptorClose(void* arg) {
+    MINTDEF int Loggo_DescriptorClose(void* arg) {
         return _close(*(int*)arg);
     }
 #endif
 
 // Common
 
-LOGGODEF int Loggo_DescriptorFlush(void* arg) {
+MINTDEF int Loggo_DescriptorFlush(void* arg) {
     LOGGO_UNUSED(arg);
     return 0;
 }
 
 
-LOGGODEF int Loggo_StreamWrite(char* text, void* arg) {
+MINTDEF int Loggo_StreamWrite(char* text, void* arg) {
     return fputs(text, (FILE*)arg);
 }
 
 
-LOGGODEF int Loggo_StreamClose(void* arg) {
+MINTDEF int Loggo_StreamClose(void* arg) {
    return fclose((FILE*)arg);
 }
 
 
-LOGGODEF int Loggo_StreamFlush(void* arg) {
+MINTDEF int Loggo_StreamFlush(void* arg) {
     return fflush((FILE*)arg);
 }
 
 
-LOGGODEF int Loggo_NullWrite(char* text, void* arg) {
+MINTDEF int Loggo_NullWrite(char* text, void* arg) {
     LOGGO_UNUSED(arg);
     LOGGO_UNUSED(text);
     return 0;
 }
 
 
-LOGGODEF int Loggo_NullClose(void* arg) {
+MINTDEF int Loggo_NullClose(void* arg) {
     LOGGO_UNUSED(arg);
     return 0;
 }
 
 
-LOGGODEF int Loggo_NullFlush(void* arg) {
+MINTDEF int Loggo_NullFlush(void* arg) {
     LOGGO_UNUSED(arg);
     return 0;
 }
@@ -428,7 +428,7 @@ static int32_t Loggo_LoggerStringHash(const char* name, const int32_t buckets, c
 
 // Create logger components, start thread with the created queue
 // Return -1 on error dont allocate anything, clean slate
-LOGGODEF int32_t Loggo_CreateLogger(const char* name, Loggo_LogFormat* user_format, Loggo_LogHandler* user_handler) {
+MINTDEF int32_t Loggo_CreateLogger(const char* name, Loggo_LogFormat* user_format, Loggo_LogHandler* user_handler) {
     #ifdef MINT__DEBUG
         assert(name);
     #endif
@@ -484,7 +484,7 @@ LOGGODEF int32_t Loggo_CreateLogger(const char* name, Loggo_LogFormat* user_form
 
 
 // Shutdown the loggers by iterating and setting values
-LOGGODEF void Loggo_DeleteLoggers() {
+MINTDEF void Loggo_DeleteLoggers() {
     for (int32_t idx = 0; idx < LOGGO_LOGGER_HASH_TABLE.capacity; idx++) {
         // Delete non null items by grabbing there names from the table
         if (LOGGO_LOGGER_HASH_TABLE.loggers[idx] != NULL && LOGGO_LOGGER_HASH_TABLE.loggers[idx] != &LOGGO_LOGGER_DELETED) {
@@ -497,7 +497,7 @@ LOGGODEF void Loggo_DeleteLoggers() {
 }
 
 // Shutdown the loggers by iterating and setting values
-LOGGODEF void Loggo_DeleteLogger(const char* name) {
+MINTDEF void Loggo_DeleteLogger(const char* name) {
     Loggo_HTDeleteItem(name);
 
     // Just delete the table and clear it so its inited next time
@@ -510,7 +510,7 @@ LOGGODEF void Loggo_DeleteLogger(const char* name) {
 
 
 // Log message with Enqueue
-LOGGODEF void Loggo_Log(const char* name, Loggo_LogLevel level, const char* msg) {
+MINTDEF void Loggo_Log(const char* name, Loggo_LogLevel level, const char* msg) {
     #ifdef MINT__DEBUG
         assert(name);
         assert(msg);
@@ -534,7 +534,7 @@ LOGGODEF void Loggo_Log(const char* name, Loggo_LogLevel level, const char* msg)
 
 // Log message with Enqueue, optionally free msg if free_string is true. In case the user wants to pass
 // a malloced string in
-LOGGODEF void Loggo_Log2(const char* name, Loggo_LogLevel level, char* msg, bool free_string) {
+MINTDEF void Loggo_Log2(const char* name, Loggo_LogLevel level, char* msg, bool free_string) {
     #ifdef MINT__DEBUG
         assert(name);
         assert(msg);
@@ -1068,7 +1068,7 @@ static void Loggo_HTInitTable() {
 // Simple hash
 static int32_t Loggo_StringHash(const char* name, const int32_t prime, const int32_t buckets) {
     int32_t hash = 0;
-    const int len = strlen(name);
+    const int32_t len = strlen(name);
     for (int32_t i = 0; i < len; i++) {
         hash += (int32_t)pow(prime, len - (i+1)) * name[i];
         hash = hash % buckets;
