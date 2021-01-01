@@ -83,6 +83,8 @@ Or perhaps set them in your shell
 You can use the library by now using the libmint and the header path `<mint/filename.h>`
 where `filename` is the same as the specific header file.
 
+NOTE: You dont need to do MINT_FILENAME_IMPLEMENTATION because the static lib already does it for you (:
+
 
 ```bash
 gcc -c myproject.c -o myproject -lmint
