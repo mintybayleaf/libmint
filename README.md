@@ -12,7 +12,7 @@ You have two options with this library.
 1.
     The `libs` folder contains a single header only library. In order to use the library you naturally just have to include
     the .h file wherever you use it in your own project. Yep just copy the file over! 
-    You must only define `FILENAME_IMPLEMENTATION` in the translation unit you want the functions to be defined,
+    You must only define `MINT_FILENAME_IMPLEMENTATION` in the translation unit you want the functions to be defined,
     not just decalared. If you dont do this you will encounter linker errors for unresolved defintions.
     You can change whether the api is declared static or extern which would scope the library to one translation unit by defining
     `MINT_FILENAME_DEF_STATIC`.
@@ -23,10 +23,11 @@ You have two options with this library.
     You can use cmake to install the library and then link to it statically or dynamically. The header files will be installed under
     `<mint/filename.h>` where `filename` is the headerfile name. 
     This way is nice because everything is bundled up nicely.
+    Notice how you dont need to define `MINT_FILENAME_IMPLEMENTATION` because the static lib does it for you!
 
 
 You will notice a lot of copied cross/platform code in this library. I did this so users could use a single header file without having to worry about other things.
-It was a concious choice I made. Ease of use in C is important to me and anyone can get started just by copying a file, defining values and compiling there code.
+It was a concious choice I made. Ease of use in C is important to me and anyone can get started just by copying a file, defining values and compiling their code.
 
 
 Some libraries have dependencies. `EzEmu` for example has SDL2. Dependencies are listed inside the library folder. I tried to minimize dependencies for example with `Loggo` there are dependencies on only the stdc library and posix/winthreads which are installed on systems by default.
@@ -48,9 +49,13 @@ NOTE: These were tested on MSVC 2019, GCC and Clang
     - Convenience logging macros
 
 
-## Installation
+## Header Installation / Usage
 
-Just copy the header files of the libs you want or.....
+Just copy the header files of the libs you want.
+Add the appropiate `MINT_FILENAME_IMPLEMENTATION` and maybe `MINT_FILENAME_DEF_STATIC`.
+If the library has extra dependencies just compile those in as well.
+
+## Libmint Installation / Usage
 
 Using CMake 3.13.4 or later you can do the following
 
@@ -78,7 +83,6 @@ export CPATH="$HOME/opt/include:$CPATH" # for includes
 
 Or perhaps set them in your shell
 
-## Usage
 
 You can use the library by now using the libmint and the header path `<mint/filename.h>`
 where `filename` is the same as the specific header file.
