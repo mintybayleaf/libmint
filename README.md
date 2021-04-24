@@ -49,4 +49,4 @@ cmake --build build --target mint_loggo_example
 
 ### Screenshot
 
-![Mint Loggo](images/mint_loggo_example.png)
+![Mint Loggo](images/mint_loggo.png)
